@@ -77,7 +77,11 @@ flowchart TD
 
 ## 🖥️ Demo
 
-> Enter any research topic → The pipeline runs live with status updates → Download the final report as **Markdown or PDF**
+Watch the multi-agent pipeline in action:
+
+![App Demo](demo.mp4)
+
+> *Enter any research topic → The pipeline runs live with status updates → Download the final report as Markdown or PDF.*
 
 ---
 

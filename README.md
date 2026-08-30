@@ -24,27 +24,27 @@ flowchart TD
     User(["👤 User\nEnters a Topic"])
     style User fill:#7c3aed,color:#fff,stroke:#5b21b6
 
-    UI["🖥️ Streamlit UI\napp2.py"]
+    UI["🖥️ Streamlit UI\napp.py"]
     style UI fill:#6d28d9,color:#fff,stroke:#4c1d95
 
     subgraph Pipeline ["⚙️ Multi-Agent Pipeline"]
         direction TB
 
-        A["🔍 Search Agent\n─────────────\nTool: web_search\nAPI: Tavily\nFinds top 3 sources"]
+        A["1️⃣ 🔍 Search Agent\n─────────────\nTool: web_search\nAPI: Tavily\nFinds top 3 sources"]
         style A fill:#1d4ed8,color:#fff,stroke:#1e3a8a
 
-        B["📄 Reader Agent\n─────────────\nTool: scrape_url\nLib: BeautifulSoup4\nScrapes best URL"]
+        B["2️⃣ 📄 Reader Agent\n─────────────\nTool: scrape_url\nLib: BeautifulSoup4\nScrapes best URL"]
         style B fill:#0369a1,color:#fff,stroke:#075985
 
-        C["✍️ Writer Chain\n─────────────\nLLM: Mistral AI\nGenerates structured\nresearch report"]
+        C["3️⃣ ✍️ Writer Chain\n─────────────\nLLM: Mistral AI\nGenerates structured\nresearch report"]
         style C fill:#065f46,color:#fff,stroke:#064e3b
 
-        D["🧐 Critic Chain\n─────────────\nLLM: Mistral AI\nScores and reviews\nthe report"]
+        D["4️⃣ 🧐 Critic Chain\n─────────────\nLLM: Mistral AI\nScores and reviews\nthe report"]
         style D fill:#92400e,color:#fff,stroke:#78350f
 
-        A -->|"Search results"| B
-        B -->|"Scraped content"| C
-        C -->|"Draft report"| D
+        A -->|"3. Search results"| B
+        B -->|"4. Scraped content"| C
+        C -->|"5. Draft report"| D
     end
 
     M["🤖 Mistral AI\nmistral-small-2603"]
@@ -56,12 +56,22 @@ flowchart TD
     DL["⬇️ Download\nMarkdown or PDF"]
     style DL fill:#374151,color:#fff,stroke:#1f2937
 
-    User --> UI
-    UI --> Pipeline
+    User -->|"1. Input Topic"| UI
+    UI -->|"2. Start Pipeline"| A
     A & C & D -.->|"LLM calls"| M
-    D --> R
-    R --> DL
+    D -->|"6. Final Report & Feedback"| R
+    R -->|"7. Save File"| DL
 ```
+
+### 🔄 Step-by-Step Flow Explanation
+
+1. **Input Topic:** The user enters a research topic into the Streamlit UI.
+2. **Start Pipeline:** The UI passes the topic to the Multi-Agent Pipeline, triggering the first agent.
+3. **Search Results:** The **Search Agent** uses the Tavily API to find the most relevant and recent online sources, passing these URLs and snippets to the next step.
+4. **Scraped Content:** The **Reader Agent** reviews the search results to find the best URL and uses BeautifulSoup4 to scrape the full webpage text.
+5. **Draft Report:** The **Writer Chain** takes the search summaries and the full scraped content, sending them to the Mistral LLM to generate a well-structured markdown report.
+6. **Final Report & Feedback:** The **Critic Chain** evaluates the draft report using the Mistral LLM, providing a score, strengths, and areas for improvement.
+7. **Save File:** The final output is rendered in the UI, where the user can read it and download it as either a Markdown (`.md`) or PDF file.
 
 ---
 

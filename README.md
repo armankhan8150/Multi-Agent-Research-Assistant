@@ -1,6 +1,6 @@
 # 🔎 Multi-Agent Research Assistant
 
-A professional multi-agent AI system that researches any topic automatically using a pipeline of specialized AI agents. Built with **LangChain**, **LangGraph**, **Mistral AI**, and **Streamlit**.
+A professional multi-agent AI system that researches any topic automatically using a pipeline of specialized AI agents. Built with **LangChain**, **Mistral AI**, and **Streamlit**.
 
 ---
 
@@ -14,6 +14,54 @@ The pipeline runs **4 agents in sequence**:
 | 2 | 📄 Reader Agent | Scrapes the most relevant URL for deeper content |
 | 3 | ✍️ Writer Chain | Drafts a structured research report (Intro → Findings → Conclusion) |
 | 4 | 🧐 Critic Chain | Reviews and scores the report with strengths & improvements |
+
+---
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart TD
+    User(["👤 User\nEnters a Topic"])
+    style User fill:#7c3aed,color:#fff,stroke:#5b21b6
+
+    UI["🖥️ Streamlit UI\napp2.py"]
+    style UI fill:#6d28d9,color:#fff,stroke:#4c1d95
+
+    subgraph Pipeline ["⚙️ Multi-Agent Pipeline"]
+        direction TB
+
+        A["🔍 Search Agent\n─────────────\nTool: web_search\nAPI: Tavily\nFinds top 3 sources"]
+        style A fill:#1d4ed8,color:#fff,stroke:#1e3a8a
+
+        B["📄 Reader Agent\n─────────────\nTool: scrape_url\nLib: BeautifulSoup4\nScrapes best URL"]
+        style B fill:#0369a1,color:#fff,stroke:#075985
+
+        C["✍️ Writer Chain\n─────────────\nLLM: Mistral AI\nGenerates structured\nresearch report"]
+        style C fill:#065f46,color:#fff,stroke:#064e3b
+
+        D["🧐 Critic Chain\n─────────────\nLLM: Mistral AI\nScores and reviews\nthe report"]
+        style D fill:#92400e,color:#fff,stroke:#78350f
+
+        A -->|"Search results"| B
+        B -->|"Scraped content"| C
+        C -->|"Draft report"| D
+    end
+
+    M["🤖 Mistral AI\nmistral-small-2603"]
+    style M fill:#be185d,color:#fff,stroke:#9d174d
+
+    R["📝 Final Report\nCritic Feedback"]
+    style R fill:#374151,color:#fff,stroke:#1f2937
+
+    DL["⬇️ Download\nMarkdown or PDF"]
+    style DL fill:#374151,color:#fff,stroke:#1f2937
+
+    User --> UI
+    UI --> Pipeline
+    A & C & D -.->|"LLM calls"| M
+    D --> R
+    R --> DL
+```
 
 ---
 
@@ -73,7 +121,7 @@ OPENAI_API_KEY="your_openai_api_key"   # optional, if switching to GPT
 ### 5. Run the Streamlit app
 
 ```bash
-streamlit run app2.py
+streamlit run app.py
 ```
 
 Or run via command line (no UI):
@@ -88,7 +136,7 @@ python pipeline.py
 
 ```
 Multi_Agent_System/
-├── app2.py           # Streamlit UI — live agent step tracker + PDF/MD download
+├── app.py           # Streamlit UI — live agent step tracker + PDF/MD download
 ├── agents.py         # Agent & chain definitions (Search, Reader, Writer, Critic)
 ├── tools.py          # LangChain tools: web_search (Tavily) + scrape_url (BS4)
 ├── pipeline.py       # CLI pipeline runner (no UI)
@@ -102,7 +150,6 @@ Multi_Agent_System/
 ## 🛠️ Tech Stack
 
 - [LangChain](https://python.langchain.com/) — Agent orchestration & chains
-- [LangGraph](https://langchain-ai.github.io/langgraph/) — Agent graph framework
 - [Mistral AI](https://mistral.ai/) — LLM backbone (`mistral-small`)
 - [Tavily](https://tavily.com/) — AI-powered web search API
 - [BeautifulSoup4](https://www.crummy.com/software/BeautifulSoup/) — Web scraping

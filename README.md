@@ -1,19 +1,44 @@
-# 🔎 Multi-Agent Research Assistant
+# Multi-Agent Research Assistant
 
-A professional multi-agent AI system that researches any topic automatically using a pipeline of specialized AI agents. Built with **LangChain**, **Mistral AI**, and **Streamlit**.
+A four-agent AI pipeline that automates end-to-end research from live web search to a structured, reviewed report; built with LangChain, Mistral AI, Tavily, and Streamlit.
 
 ---
 
-## 🧠 How It Works
+## How It Works
 
-The pipeline runs **4 agents in sequence**:
+The pipeline runs four specialized agents in sequence:
 
-| Step | Agent | Role |
-|------|-------|------|
-| 1 | 🔍 Search Agent | Finds recent, reliable sources using Tavily web search |
-| 2 | 📄 Reader Agent | Scrapes the most relevant URL for deeper content |
-| 3 | ✍️ Writer Chain | Drafts a structured research report (Intro → Findings → Conclusion) |
-| 4 | 🧐 Critic Chain | Reviews and scores the report with strengths & improvements |
+```
+User Query
+    │
+    ▼
+┌──────────────┐
+│ Search Agent  │  ──→  Finds top 3 sources via Tavily web search
+└──────────────┘
+    │
+    ▼
+┌──────────────┐
+│ Reader Agent  │  ──→  Scrapes and extracts content from the best URL
+└──────────────┘
+    │
+    ▼
+┌──────────────┐
+│ Writer Chain  │  ──→  Drafts a structured report (intro, findings, conclusion)
+└──────────────┘
+    │
+    ▼
+┌──────────────┐
+│ Critic Chain  │  ──→  Scores the draft, identifies weaknesses, refines output
+└──────────────┘
+    │
+    ▼
+Final Report (Markdown or PDF)
+```
+
+### Key Design Decisions
+- **Self-correcting output** — the Critic Chain reviews and scores every draft before delivery, reducing unsupported claims
+- **Dual LLM usage** — Mistral AI handles both writing and critique in separate chains to avoid self-review bias
+- **Downloadable reports** — output delivered as formatted Markdown or PDF
 
 ---
 
@@ -75,74 +100,17 @@ flowchart TD
 
 ---
 
-## 🖥️ Demo
+## 🛠 Tech Stack
 
-Watch the multi-agent pipeline in action:
-
-<video src="demo.mp4" controls muted playsinline width="100%"></video>
-
-> *Enter any research topic → The pipeline runs live with status updates → Download the final report as Markdown or PDF.*
-
----
-
-## 🚀 Getting Started
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/Multi-Agent-Research-Assistant.git
-cd Multi-Agent-Research-Assistant
-```
-
-### 2. Create a virtual environment
-
-```bash
-python -m venv venv
-
-# Windows
-venv\Scripts\activate
-
-# Mac / Linux
-source venv/bin/activate
-```
-
-### 3. Install dependencies
-
-```bash
-pip install -r requirements.txt
-pip install streamlit reportlab
-```
-
-### 4. Set up environment variables
-
-```bash
-cp .env.example .env
-```
-
-Open `.env` and fill in your API keys:
-
-```env
-MISTRAL_API_KEY="your_mistral_api_key"
-TAVILY_API_KEY="your_tavily_api_key"
-OPENAI_API_KEY="your_openai_api_key"   # optional, if switching to GPT
-```
-
-> Get your keys:
-> - Mistral: https://console.mistral.ai/
-> - Tavily: https://app.tavily.com/
-> - OpenAI: https://platform.openai.com/
-
-### 5. Run the Streamlit app
-
-```bash
-streamlit run app.py
-```
-
-Or run via command line (no UI):
-
-```bash
-python pipeline.py
-```
+| Component | Technology |
+|---|---|
+| Agent Framework | LangChain |
+| LLM | Mistral AI (`mistral-small`) |
+| Web Search | Tavily API |
+| Web Scraping | BeautifulSoup4 |
+| PDF Generation | ReportLab |
+| UI | Streamlit |
+| Language | Python 3.10+ |
 
 ---
 
@@ -150,33 +118,95 @@ python pipeline.py
 
 ```
 Multi_Agent_System/
-├── app.py           # Streamlit UI — live agent step tracker + PDF/MD download
-├── agents.py         # Agent & chain definitions (Search, Reader, Writer, Critic)
-├── tools.py          # LangChain tools: web_search (Tavily) + scrape_url (BS4)
-├── pipeline.py       # CLI pipeline runner (no UI)
-├── requirements.txt  # Python dependencies
-├── .env.example      # Template for environment variables
-└── .gitignore        # Ignores .env, venv, __pycache__, etc.
+├── app.py            # Streamlit web UI
+├── agents.py         # Agent and chain definitions
+├── tools.py          # Tavily search and scraping tools
+├── pipeline.py       # CLI runner
+├── requirements.txt
+├── .env.example
+└── README.md
 ```
 
 ---
 
-## 🛠️ Tech Stack
+## 🚀 Getting Started
 
-- [LangChain](https://python.langchain.com/) — Agent orchestration & chains
-- [Mistral AI](https://mistral.ai/) — LLM backbone (`mistral-small`)
-- [Tavily](https://tavily.com/) — AI-powered web search API
-- [BeautifulSoup4](https://www.crummy.com/software/BeautifulSoup/) — Web scraping
-- [Streamlit](https://streamlit.io/) — Interactive web UI
-- [ReportLab](https://www.reportlab.com/) — PDF report generation
+### Prerequisites
+- Python 3.10+
+- Mistral AI API key → [console.mistral.ai](https://console.mistral.ai)
+- Tavily API key → [tavily.com](https://tavily.com)
+
+### Installation
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/armankhan8150/Multi-Agent-Research-Assistant.git
+cd Multi-Agent-Research-Assistant
+
+# 2. Create a virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Set up environment variables
+cp .env.example .env
+# Add your API keys to .env
+```
+
+### Environment Variables
+
+```env
+MISTRAL_API_KEY=your_mistral_api_key
+TAVILY_API_KEY=your_tavily_api_key
+```
+
+### Run
+
+```bash
+# Web UI
+streamlit run app.py
+
+# Command line
+python pipeline.py
+```
+
+---
+
+## 💡 Example Output
+
+**Input:** `"What are the latest developments in LLM agent frameworks?"`
+
+**Output:** A structured report with:
+- Introduction and research context
+- Key findings from scraped sources
+- Conclusion and synthesis
+- Critic score and improvement notes
+- Downloadable as Markdown or PDF
+
+---
+
+## 🗺 Roadmap
+
+- [ ] Parallel multi-source reading (Reader Agent)
+- [ ] Source citation with URLs in final report
+- [ ] Support for OpenAI models as alternative LLM
+- [ ] Export to Notion
+
+---
+
+## 👤 Author
+
+**Arman Malik** — AI Engineer
+[LinkedIn](https://linkedin.com/in/arman-malik) · [GitHub](https://github.com/armankhan8150)
 
 ---
 
 ## 📄 License
 
-MIT License — feel free to use and modify.
+MIT License — see [LICENSE](LICENSE) for details.
 
----
 
 ## 🙌 Author
 

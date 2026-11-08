@@ -36,9 +36,9 @@ Final Report (Markdown or PDF)
 ```
 
 ### Key Design Decisions
-- **Self-correcting output** — the Critic Chain reviews and scores every draft before delivery, reducing unsupported claims
-- **Dual LLM usage** — Mistral AI handles both writing and critique in separate chains to avoid self-review bias
-- **Downloadable reports** — output delivered as formatted Markdown or PDF
+- **Self-correcting output**: the Critic Chain reviews and scores every draft before delivery, reducing unsupported claims
+- **Dual LLM usage**: Mistral AI handles both writing and critique in separate chains to avoid self-review bias
+- **Downloadable reports**: output delivered as formatted Markdown or PDF
 
 ---
 
@@ -198,16 +198,12 @@ python pipeline.py
 
 ## 👤 Author
 
-**Arman Malik** — AI Engineer
+**Arman Malik**: AI Engineer
 [LinkedIn](https://linkedin.com/in/arman-malik) · [GitHub](https://github.com/armankhan8150)
 
 ---
 
 ## 📄 License
 
-MIT License — see [LICENSE](LICENSE) for details.
+MIT License: see [LICENSE](LICENSE) for details.
 
-
-## 🙌 Author
-
-Made with ❤️ — contributions and feedback welcome!
